@@ -21,5 +21,13 @@ module Enumerables
     end
     array
   end
+
+  def my_any?
+    final = false
+    self.my_each { |param| final = true if yield(param)}
+    final
+  end
+
+  
   ############
 end
