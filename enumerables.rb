@@ -12,5 +12,14 @@ module Enumerables
     while i < self.size do yield(self[i], i) ; i += 1 end
   end
 
+  def my_select
+    i = 0
+    array = []
+    while i < self.size
+    array << self[i] if yield(self[i])
+    i += 1
+    end
+    array
+  end
   ############
 end
