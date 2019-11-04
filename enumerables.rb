@@ -74,6 +74,6 @@ module Enumerables # rubocop:disable Metrics/ModuleLength
   end
 
   def multiply_els(arr)
-    arr.my_inject { |product, x| product * x }
+    arr.my_inject { |mult, z| mult * z }
   end
 end
