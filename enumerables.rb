@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Enumerables # rubocop:disable Metrics/ModuleLength
+module Enumerables
   def my_each
     i = 0
     while i < size
