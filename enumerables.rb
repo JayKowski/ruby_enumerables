@@ -62,5 +62,11 @@ module Enumerables
     arr
   end
 
+  def my_inject(starter = nil)
+    starter == nil ? result = self[0] : result = starter
+    self.my_each { |v| result = yield(result, y)}
+    result
+  end
+
   ############
 end
