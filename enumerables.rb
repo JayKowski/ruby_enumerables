@@ -1,53 +1,58 @@
-# rubocop:disable Style/CaseEquality
 # frozen_string_literal: true
 
-module Enumerables
+module Enumerables # rubocop:disable Metrics/ModuleLength
   def my_each
     i = 0
-    while i < self.size do yield(self[i]); i += 1 end
+    while i < size
+      yield(self[i])
+      i += 1
+    end
   end
 
   def my_each_with_index
     i = 0
-    while i < self.size do yield(self[i], i) ; i += 1 end
+    while i < size
+      yield(self[i], i)
+      i += 1
+    end
   end
 
   def my_select
     i = 0
     array = []
-    while i < self.size
-    array << self[i] if yield(self[i])
-    i += 1
+    while i < size
+      array << self[i] if yield(self[i])
+      i += 1
     end
     array
   end
 
   def my_any?
     final = false
-    self.my_each { |param| final = true if yield(param)}
+    my_each { |param| final = true if yield(param) }
     final
   end
 
   def my_all?
-    final = false
-    self.my_each { |value| yield(value) ?  final = true : final = false}
-    final
+    # final = false
+    my_each { |value| yield(value) ? true : false }
+    # final
   end
 
   def my_none?
     final = true
-    self.my_each { |param| final = false if yield(param)}
+    my_each { |param| final = false if yield(param) }
     final
   end
 
   def my_count(arg = nil)
     counter = 0
     if arg
-      self.my_each { |param| if param == arg then counter += 1 end}
+      my_each { |param| counter += 1 if param == arg }
     elsif block_given?
-      self.my_each { |param| counter += 1 if yield(param)}
+      my_each { |param| counter += 1 if yield(param) }
     else
-      counter = self.size
+      counter = size
     end
     counter
   end
@@ -55,18 +60,20 @@ module Enumerables
   def my_map(arg = nil)
     arr = []
     if arg
-      self.my_each_with_index { |elem, val| arr[val] = arr.call(elem)}
+      my_each_with_index { |elem, val| arr[val] = arr.call(elem) }
     else
-      self.my_each_with_index { |elem, val| arr[val] = yield(elem)}
+      my_each_with_index { |elem, val| arr[val] = yield(elem) }
     end
     arr
   end
 
   def my_inject(starter = nil)
-    starter == nil ? result = self[0] : result = starter
-    self.my_each { |v| result = yield(result, y)}
+    result = starter.nil? ? self[0] : starter
+    my_each { |v| result = yield(result, v) }
     result
   end
 
-  ############
+  def multiply_els(arr)
+    arr.my_inject { |product, x| product * x }
+  end
 end
