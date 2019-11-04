@@ -28,6 +28,12 @@ module Enumerables
     final
   end
 
+  def my_all?
+    final = false
+    self.my_each { |value| yield(value) ?  final = true : final = false}
+    final
+  end
+
   
   ############
 end
