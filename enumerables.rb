@@ -39,5 +39,17 @@ module Enumerables
     self.my_each { |param| final = false if yield(param)}
     final
   end
+
+  def my_count(arg = nil)
+    counter = 0
+    if arg
+      self.my_each { |param| if param == arg then counter += 1 end}
+    elsif block_given?
+      self.my_each { |param| counter += 1 if yield(param)}
+    else
+      counter = self.size
+    end
+    counter
+  end
   ############
 end
