@@ -34,6 +34,10 @@ module Enumerables
     final
   end
 
-  
+  def my_none?
+    final = true
+    self.my_each { |param| final = false if yield(param)}
+    final
+  end
   ############
 end
