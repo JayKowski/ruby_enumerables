@@ -51,5 +51,16 @@ module Enumerables
     end
     counter
   end
+
+  def my_map(arg = nil)
+    arr = []
+    if arg
+      self.my_each_with_index { |elem, val| arr[val] = arr.call(elem)}
+    else
+      self.my_each_with_index { |elem, val| arr[val] = yield(elem)}
+    end
+    arr
+  end
+
   ############
 end
