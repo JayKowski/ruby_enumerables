@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable ModuleLength
 module Enumerable
   def my_each
     return to_enum unless block_given?
@@ -148,3 +149,4 @@ module Enumerable
     arr.my_inject { |mult, z| mult * z }
   end
 end
+# rubocop:enable ModuleLength
