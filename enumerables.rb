@@ -40,49 +40,49 @@ module Enumerable
   def my_select
     return to_enum unless block_given?
 
-    i = 0
-    if is_a? Array
-      my_array = []
-      my_each do |this|
-        my_array << this[i] if yield(this)
-      end
-    elsif is_a? Hash
-      my_array = {}
-      my_each do |key, value|
-        my_array[key] = value if yield(key, value)
-      end
+    my_array = []
+    my_each do |element|
+      next unless yield element
+
+      my_array << element
     end
     my_array
   end
 
-  def my_any?(expr = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    if !block_given? && expr.nil?
-      my_each do |arg|
-        return true if arg
-      end
-    elsif expr.is_a? expr
-      my_each do |arg|
-        return true if arg =~ expr
-      end
-    elsif expr.is_a? Class
-      my_each do |arg|
-        return true if arg.is_a? expr
-      end
-    elsif expr
-      my_each do |arg|
-        return true if arg == expr
-      end
-    elsif is_a? Array
-      my_each do |arg|
-        return true if yield(arg)
-      end
-    elsif is_a? Hash
-      my_each do |k, v|
-        return true if yield(k, v)
-      end
-    end
-    false
-  end
+  def my_any?(obj = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+   if block_given?
+     my_each do |x|
+       next unless yield x
+
+       return true
+     end
+   elsif !obj
+     my_each do |x|
+       next unless x
+
+       return true
+     end
+   elsif obj.is_a? Regexp
+     my_each do |x|
+       next if x.match(obj).nil?
+
+       return true
+     end
+   elsif obj.class == Class
+     my_each do |x|
+       next unless x.is_a?(obj)
+
+       return true
+     end
+   else
+     my_each do |x|
+       next unless x == obj
+
+       return true
+     end
+   end
+   false
+ end
 
   def my_none?(expr = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     if !block_given? && expr.nil?
@@ -149,4 +149,11 @@ module Enumerable
     arr.my_inject { |mult, z| mult * z }
   end
 end
+
+arr = [1, 2, 5, 1, 3, 4, 7, 9, 1, 3, 6, 3, 8, 5, 9, 0, 1, 4, 5, 7, 8, 10]
+
+block = proc { |num| num < 10 }
+
+puts arr.my_select(&block)
+
 # rubocop:enable ModuleLength
