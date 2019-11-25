@@ -49,69 +49,110 @@ module Enumerable
     my_array
   end
 
-  def my_any?(obj = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def my_all?(expr = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       if block_given?
-        my_each do |x|
-          next unless yield x
+        my_each do |arg|
+          next if yield arg
 
-          return true
+          return false
         end
-      elsif !obj
-        my_each do |x|
-          next unless x
+      elsif !expr
+        my_each do |arg|
+          next if arg
 
-          return true
+          return false
         end
-      elsif obj.is_a? Regexp
-        my_each do |x|
-          next if x.match(obj).nil?
+      elsif expr.is_a? Regexp
+        my_each do |arg|
+          next if arg.match(expr)
 
-           return true
-      end
-      elsif obj.class == Class
-      my_each do |x|
-           next unless x.is_a?(obj)
+          return false
+        end
+      elsif expr.class == Class
+        my_each do |arg|
+          next if arg.is_a?(expr)
 
-           return true
-      end
+          return false
+        end
       else
-      my_each do |x|
-           next unless x == obj
+        my_each do |arg|
+          next if arg == expr
 
-           return true
+          return false
+        end
+      end
+      true
+    end
+
+  def my_any?(expr = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    if block_given?
+      my_each do |arg|
+        next unless yield arg
+
+        return true
+      end
+    elsif !expr
+      my_each do |arg|
+        next unless arg
+
+        return true
+      end
+    elsif expr.is_a? Regexp
+      my_each do |arg|
+        next if arg.match(expr).nil?
+
+        return true
+      end
+    elsif expr.class == Class
+      my_each do |arg|
+        next unless arg.is_a?(expr)
+
+        return true
+      end
+    else
+      my_each do |arg|
+        next unless arg == expr
+
+        return true
       end
     end
-      false
-    end
+    false
+  end
 
   def my_none?(expr = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    if !block_given? && expr.nil?
-      my_each do |arg|
-        return false if arg
-      end
-    elsif expr.is_a? expr
-      my_each do |arg|
-        return false if arg =~ expr
-      end
-    elsif expr.is_a? Class
-      my_each do |arg|
-        return false if arg.is_a? expr
-      end
-    elsif expr
-      my_each do |arg|
-        return false if arg == expr
-      end
-    elsif is_a? Array
-      my_each do |arg|
-        return false if yield(arg)
-      end
-    elsif is_a? Hash
-      my_each do |k, v|
-        return false if yield(k, v)
-      end
-    end
-    true
-  end
+     if block_given?
+       my_each do |arg|
+         next unless yield arg
+
+         return false
+       end
+     elsif !expr
+       my_each do |arg|
+         next unless arg
+
+         return false
+       end
+     elsif expr.is_a? Regexp
+       my_each do |arg|
+         next if arg.match(expr).nil?
+
+         return false
+       end
+     elsif expr.class == Class
+       my_each do |arg|
+         next unless arg.is_a?(expr)
+
+         return false
+       end
+     else
+       my_each do |arg|
+         next unless arg == expr
+
+         return false
+       end
+     end
+     true
+   end
 
   def my_count(arg = nil)
     counter = 0
@@ -152,9 +193,9 @@ end
 
 arr = [1, 2, 5, 1, 3, 4, 7, 9, 1, 3, 6, 3, 8, 5, 9, 0, 1, 4, 5, 7, 8, 10]
 
-block = proc { |num| num < 0 }
+block = proc { |num| num > 10 }
 words = ["dog", "door", "rod", "blade"]
 
-puts words.my_any?(/o/)
+puts words.my_none?(/z/)
 
 # rubocop:enable ModuleLength
