@@ -50,39 +50,39 @@ module Enumerable
   end
 
   def my_any?(obj = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-   if block_given?
-     my_each do |x|
-       next unless yield x
+      if block_given?
+        my_each do |x|
+          next unless yield x
 
-       return true
-     end
-   elsif !obj
-     my_each do |x|
-       next unless x
+          return true
+        end
+      elsif !obj
+        my_each do |x|
+          next unless x
 
-       return true
-     end
-   elsif obj.is_a? Regexp
-     my_each do |x|
-       next if x.match(obj).nil?
+          return true
+        end
+      elsif obj.is_a? Regexp
+        my_each do |x|
+          next if x.match(obj).nil?
 
-       return true
-     end
-   elsif obj.class == Class
-     my_each do |x|
-       next unless x.is_a?(obj)
+           return true
+      end
+      elsif obj.class == Class
+      my_each do |x|
+           next unless x.is_a?(obj)
 
-       return true
-     end
-   else
-     my_each do |x|
-       next unless x == obj
+           return true
+      end
+      else
+      my_each do |x|
+           next unless x == obj
 
-       return true
-     end
-   end
-   false
- end
+           return true
+      end
+    end
+      false
+    end
 
   def my_none?(expr = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     if !block_given? && expr.nil?
@@ -152,8 +152,9 @@ end
 
 arr = [1, 2, 5, 1, 3, 4, 7, 9, 1, 3, 6, 3, 8, 5, 9, 0, 1, 4, 5, 7, 8, 10]
 
-block = proc { |num| num < 10 }
+block = proc { |num| num < 0 }
+words = ["dog", "door", "rod", "blade"]
 
-puts arr.my_select(&block)
+puts words.my_any?(/o/)
 
 # rubocop:enable ModuleLength
