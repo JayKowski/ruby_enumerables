@@ -193,9 +193,9 @@ end
 
 arr = [1, 2, 5, 1, 3, 4, 7, 9, 1, 3, 6, 3, 8, 5, 9, 0, 1, 4, 5, 7, 8, 10]
 
-block = proc { |num| num > 10 }
+block = proc { |num| num >= 0 }
 words = ["dog", "door", "rod", "blade"]
 
-puts words.my_none?(/z/)
+puts arr.my_all?(&block)
 
 # rubocop:enable ModuleLength
