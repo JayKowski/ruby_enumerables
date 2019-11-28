@@ -152,7 +152,7 @@ module Enumerable
        end
      end
      true
-   end
+  end
 
   def my_count(arg = nil)
     counter = 0
@@ -178,13 +178,17 @@ module Enumerable
     arr
   end
 
-  def my_inject(starter = nil)
-    return to_enum unless block_given?
-
-    result = starter.nil? ? self[0] : starter
-    my_each { |v| result = yield(result, v) }
-    result
+  def my_inject(initial = nil, sym = nil, &block)
+    sum = initial || first
+    sum = first if initial.class == Symbol
+    sum = initial if !initial.class == Symbol
+    sum -= sum if sum != initial && sum.class != String
+    my_each { |e| sum = block.call(sum, e) } if block_given?
+    my_each { |e| sum = sum.send(sym, e) } if initial && sym
+    my_each { |e| sum = sum.send(initial, e) } if initial.class == Symbol
+    sum
   end
+
 
   def multiply_els(arr)
     arr.my_inject { |mult, z| mult * z }
@@ -193,9 +197,7 @@ end
 
 arr = [1, 2, 5, 1, 3, 4, 7, 9, 1, 3, 6, 3, 8, 5, 9, 0, 1, 4, 5, 7, 8, 10]
 
-block = proc { |num| num >= 0 }
+block = proc { |num| num > 10 }
 words = ["dog", "door", "rod", "blade"]
 
-puts arr.my_all?(&block)
-
-# rubocop:enable ModuleLength
+puts arr.my_inject(:+)
