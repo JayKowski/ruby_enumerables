@@ -43,7 +43,7 @@ module Enumerable
     my_array = []
     my_each do |element|
       next unless yield element
-      
+
       my_array << element
     end
     my_array
