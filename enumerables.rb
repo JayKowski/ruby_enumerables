@@ -178,15 +178,27 @@ module Enumerable
     arr
   end
 
-  def my_inject(initial = nil, sym = nil, &block) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    sum = initial || first
-    sum = first if initial.class == Symbol
-    sum = initial if !initial.class == Symbol
-    sum -= sum if sum != initial && sum.class != String
-    my_each { |e| sum = block.call(sum, e) } if block_given?
-    my_each { |e| sum = sum.send(sym, e) } if initial && sym
-    my_each { |e| sum = sum.send(initial, e) } if initial.class == Symbol
-    sum
+  def my_inject(*args) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    arr = to_a.dup
+    if args[0].nil?
+      operation = arr.shift
+    elsif args[1].nil? && !block_given?
+      symbol = args[0]
+      operation = arr.shift
+    elsif args[1].nil? && block_given?
+      operation = args[0]
+    else
+      operation = args[0]
+      symbol = args[1]
+    end
+    arr[0..-1].my_each do |elem|
+      operation = if symbol
+                    operation.send(symbol, elem)
+                  else
+                    yield(operation, elem)
+                  end
+    end
+    operation
   end
 
   def multiply_els(arr)
