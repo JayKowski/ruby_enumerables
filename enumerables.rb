@@ -200,10 +200,10 @@ module Enumerable
     end
     operation
   end
+end
 
-  def multiply_els(arr)
-    arr.my_inject { |mult, z| mult * z }
-  end
+def multiply_els(arr)
+  arr.my_inject { |mult, z| mult * z }
 end
 
 # rubocop:enable ModuleLength
